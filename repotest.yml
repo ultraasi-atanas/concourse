@@ -1,0 +1,31 @@
+---
+resources:
+- name: jeff
+  type: git
+  check_every: 1m
+  source:
+    uri: https://github.com/ultraasi-atanas/concourse.git
+    branch: master
+
+jobs:
+- name: whats-here
+  plan:
+    - get: jeff
+      trigger: true
+    - task: list
+      config: 
+        platform: linux
+        image_resource:
+          type: registry-image
+          source: 
+            repository: alpine
+            tag: latest
+        inputs:
+        - name: jeff
+        run: 
+          path: /bin/sh
+          args:
+          - -exc
+          - |
+            cd jeff
+            ls
